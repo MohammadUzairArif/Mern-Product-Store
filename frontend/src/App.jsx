@@ -5,10 +5,11 @@ import { Route, Routes } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import CreatePage from './pages/CreatePage'
 import Navbar from './components/Navbar'
+import { useColorModeValue } from './components/ui/color-mode'
 
 const App = () => {
   return (
-    <Box minH={"100vh"}>
+    <Box minH={"100vh"} bg={useColorModeValue("gray.200", "gray.900")} >
       <Navbar />
       <Routes>
         <Route path='/' element={<HomePage/>}/>

@@ -3,7 +3,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { CiSquarePlus } from "react-icons/ci";
 import { useColorMode } from "./ui/color-mode";
-
+import { IoMoon } from "react-icons/io5";
+import { LuSun } from "react-icons/lu";
 const Navbar = () => {
     
    const { colorMode, toggleColorMode } = useColorMode();
@@ -32,9 +33,9 @@ const Navbar = () => {
           </Link>
           <Button onClick={toggleColorMode}>
             {colorMode === "light" ? (
-              <Text fontSize={20}>🌙</Text>
+              <Text fontSize={20}><IoMoon /></Text>
             ) : (
-              <Text fontSize={20}>☀️</Text>
+              <Text fontSize={20}><LuSun /></Text>
             )}
           </Button>
         </HStack>
