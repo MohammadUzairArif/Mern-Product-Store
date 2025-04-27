@@ -1,41 +1,77 @@
-import { useColorModeValue } from '@/components/ui/color-mode'
-import { useProductStore } from '@/store/product'
-import { Box, Button, Container, Heading, Input, VStack } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import  { useState } from 'react';
+import { useProduct } from '../context/ProductContext';
 
-const CreatePage = () => {
+function CreatePage() {
+  const { createProduct } = useProduct();
+
   const [newProduct, setNewProduct] = useState({
-    name: "",
-    price: "",
-    image: "",
-  })
- const {createProduct} = useProductStore()
-  const handleAddProduct =async () => {
-    const {success,message} = await createProduct(newProduct)
-    console.log("Success:", success)
-    console.log("Message:", message)
-  }
+    name: '',
+    price: '',
+    image: ''
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setNewProduct((prev) => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleAddProduct = async () => {
+    const res = await createProduct(newProduct);
+
+    if (res.success) {
+      console.log(res.message);
+      
+      setNewProduct({ name: '', price: '', image: '' });
+    } else {
+      console.error(res.message);
+    }
+  };
+
   return (
-    <Container  maxW={"container.sm"} >
-      <VStack spacing={8}>
-        <Heading as={"h1"} size={"2xl"} mb={8} textAlign={"center"}>Create New Product</Heading>
+    <div className="max-w-[1140px] px-4 mx-auto py-8">
+      <h2 className="text-2xl font-bold mb-6 text-center bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+        Add New Product
+      </h2>
 
-        <Box w={'full'} bg={useColorModeValue("gray.200", "gray.800")} p={6} rounded={"lg"} shadow={"md"}>
+      <div className="space-y-4 bg-gray-900 p-6 rounded-lg shadow-md">
+        <input
+          name="name"
+          value={newProduct.name}
+          onChange={handleChange}
+          placeholder="Product Name"
+          className="border border-gray-700 p-2 w-full rounded-md bg-gray-800 text-white placeholder-gray-400"
+        />
+        <input
+          name="price"
+          value={newProduct.price}
+          onChange={handleChange}
+          placeholder="Product Price"
+          type="number"
+          className="border border-gray-700 p-2 w-full rounded-md bg-gray-800 text-white placeholder-gray-400"
+        />
+        <input
+          name="image"
+          value={newProduct.image}
+          onChange={handleChange}
+          placeholder="Image URL"
+          className="border border-gray-700 p-2 w-full rounded-md bg-gray-800 text-white placeholder-gray-400"
+        />
 
-          <VStack spacing={5} >
-            <Input type="text" placeholder='Product Name' name='name' value={newProduct.name} onChange={(e)=> setNewProduct({...newProduct,name: e.target.value})}/>
-
-            <Input type="number" placeholder='Product Price' name='price' value={newProduct.price} onChange={(e)=> setNewProduct({...newProduct,price: e.target.value})}/>
-
-            <Input  placeholder='Product Image URL' name='image' value={newProduct.image} onChange={(e)=> setNewProduct({...newProduct,image: e.target.value})}/>
-
-            <Button colorScheme ='blue' onClick={handleAddProduct} w={'full'}>Add Product</Button>
-          </VStack>
-
-        </Box>
-      </VStack>
-    </Container>
-  )
+        <button
+          disabled={!newProduct.name || !newProduct.price || !newProduct.image}
+          onClick={handleAddProduct}
+          className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-md transition 
+            bg-blue-600 hover:bg-blue-700 text-white 
+            disabled:bg-gray-600 disabled:cursor-not-allowed"
+        >
+          Add Product
+        </button>
+      </div>
+    </div>
+  );
 }
 
-export default CreatePage
+export default CreatePage;

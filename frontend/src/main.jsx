@@ -1,17 +1,18 @@
 
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App'
+import './index.css' // tailwind import
+import { ProductProvider } from "./context/ProductContext";
 
-import App from "./App.jsx";
-import { BrowserRouter } from "react-router-dom";
-import { Provider } from "./components/ui/provider.jsx";
 
-createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <BrowserRouter>
-      <Provider>
-        <App />
-      </Provider>
-    </BrowserRouter>
-  </StrictMode>
-);
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <ProductProvider>
+
+      <App />
+    </ProductProvider>
+
+
+  </React.StrictMode>
+)

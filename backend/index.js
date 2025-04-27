@@ -7,6 +7,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8000; // Use the port from environment variables or default to 8000
 
+app.use(cors());
 app.use(express.json()); // Middleware to parse JSON request req.body
 
 app.use('/api/products', productRoute); // Mount the product route
