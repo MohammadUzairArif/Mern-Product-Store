@@ -14,9 +14,7 @@ export const ProductProvider = ({ children }) => {
 
     try {
       const response = await addProduct(newProduct);
-        
-     
-
+ 
       const createdProduct = response.data.product;
 
       setProducts((prev) => [...prev, createdProduct]);
