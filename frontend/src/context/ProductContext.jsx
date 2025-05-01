@@ -1,5 +1,8 @@
-import { createContext, useCallback, useContext, useState } from "react";
-import { addProduct, deleteProduct, getProducts } from "../api/ProductApi.js";
+import { createContext, useContext, useState,useCallback } from "react";
+import { addProduct,deleteProduct,getProducts ,updateProduct} from "../api/ProductApi.js";
+import { toast } from "react-toastify";
+
+
 
 const ProductContext = createContext();
 
@@ -14,69 +17,133 @@ export const ProductProvider = ({ children }) => {
 
     try {
       const response = await addProduct(newProduct);
+        
+     
+
       const createdProduct = response.data.product;
-     
-     
+      
+
       setProducts((prev) => [...prev, createdProduct]);
+      toast.success("Product created successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      
+        theme: "dark",
+      });
       return { success: true, message: "Product created successfully" };
     } catch (error) {
+      toast.error("Failed to create product", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      
+        theme: "dark",
+      });
       console.error(error);
       return { success: false, message: "Server error" };
     }
-  };
+};
 
-  // delete product
+  // Delete Product
   const removeProduct = async (id) => {
     try {
-      const respond = await deleteProduct(id);
-      if(respond.status === 200){
-
+      const response = await deleteProduct(id);
+      if (response.status === 200) {
         setProducts((prev) => prev.filter((product) => product._id !== id));
+        toast.success("Product deleted successfully!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "dark",
+        });
         return { success: true, message: "Product deleted successfully" };
-      }else{
-        console.error(respond.data.message);
-        return { success: false, message: "Product not found" };
+      } else {
+        toast.error("Failed to delete product", {
+          position: "top-right",
+          autoClose: 3000,
+          theme: "dark",
+        });
+         console.error(response.data.message);
+        return { success: false, message: "Failed to delete product" };
       }
-      
     } catch (error) {
       console.error(error);
       return { success: false, message: "Server error" };
     }
   };
 
-  // Fetch Products
   const fetchProducts = useCallback(async () => {
     try {
       const response = await getProducts();
-      setProducts(response.data.products);
-      return { success: true, message: "Products fetched successfully" };
+      if (response.status === 200) {
+        const products = response.data.products;
+        setProducts(products);
+        return { success: true, message: "Products found" };
+      } else {
+        return { success: false, message: "Products not found" };
+      }
     } catch (error) {
       console.error(error);
       return { success: false, message: "Server error" };
     }
-  },[])
+  }, []);
 
-  // update product
-  const updateProduct = async (id, updatedProduct) => {
-    if (!updatedProduct.name || !updatedProduct.image || !updatedProduct.price) {
-      return { success: false, message: "Please fill all fields." };
-    }
 
+  //update product
+  const updateAProduct = async (id, updatedProduct) => {
     try {
       const response = await updateProduct(id, updatedProduct);
-      const updatedProductData = response.data.product;
-      setProducts((prev) =>
-        prev.map((product) => (product._id === id ? updatedProductData : product))
-      );
-      return { success: true, message: "Product updated successfully" };
+      if (response.status === 200) {
+        updatedProduct = response.data.product;
+        setProducts((prev) =>
+          prev.map((product) => (product._id === id ? updatedProduct : product))
+        );
+        toast.success("Product updated successfully!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "dark",
+        });
+        return { success: true, message: "Product updated successfully" };
+      } else {
+        toast.error("Failed to update product", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "dark",
+        });
+        return { success: false, message: "Failed to update product" };
+      }
     } catch (error) {
       console.error(error);
       return { success: false, message: "Server error" };
     }
   };
 
+  
+
+
+
+
+
   return (
-    <ProductContext.Provider value={{ products, createProduct, removeProduct, fetchProducts, updateProduct }}>
+    <ProductContext.Provider value={{ products, createProduct, removeProduct,fetchProducts,updateAProduct }}>
       {children}
     </ProductContext.Provider>
   );
@@ -85,4 +152,5 @@ export const ProductProvider = ({ children }) => {
 export const useProduct = () => {
     return useContext(ProductContext);
   };
+
 
