@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import { addProduct } from "../api/ProductApi.js";
+import { addProduct, deleteProduct } from "../api/ProductApi.js";
 
 const ProductContext = createContext();
 
@@ -14,9 +14,9 @@ export const ProductProvider = ({ children }) => {
 
     try {
       const response = await addProduct(newProduct);
- 
       const createdProduct = response.data.product;
-
+     
+     
       setProducts((prev) => [...prev, createdProduct]);
       return { success: true, message: "Product created successfully" };
     } catch (error) {
@@ -25,10 +25,28 @@ export const ProductProvider = ({ children }) => {
     }
   };
 
+  // delete product
+  const removeProduct = async (id) => {
+    try {
+      const respond = await deleteProduct(id);
+      if(respond.status === 200){
+
+        setProducts((prev) => prev.filter((product) => product._id !== id));
+        return { success: true, message: "Product deleted successfully" };
+      }else{
+        console.error(respond.data.message);
+        return { success: false, message: "Product not found" };
+      }
+      
+    } catch (error) {
+      console.error(error);
+      return { success: false, message: "Server error" };
+    }
+  };
 
 
   return (
-    <ProductContext.Provider value={{ products, createProduct }}>
+    <ProductContext.Provider value={{ products, createProduct, removeProduct }}>
       {children}
     </ProductContext.Provider>
   );
@@ -38,7 +56,3 @@ export const useProduct = () => {
     return useContext(ProductContext);
   };
 
-// i am not understand it whyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
-// koi meri madad kro bhai isko samjhne ma
-//arhy bhai koi help kro
-//kl isko sahi se niptaonga
