@@ -6,6 +6,7 @@ import { ToastContainer } from 'react-toastify';
 
 const HomePage = () => {
   const { products, fetchProducts } = useProduct();
+console.log(products);
 
   useEffect(() => {
     const fetchData = async () => {
