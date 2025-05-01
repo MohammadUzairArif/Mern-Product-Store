@@ -1,5 +1,5 @@
-import { createContext, useContext, useState } from "react";
-import { addProduct, deleteProduct } from "../api/ProductApi.js";
+import { createContext, useCallback, useContext, useState } from "react";
+import { addProduct, deleteProduct, getProducts } from "../api/ProductApi.js";
 
 const ProductContext = createContext();
 
@@ -44,9 +44,39 @@ export const ProductProvider = ({ children }) => {
     }
   };
 
+  // Fetch Products
+  const fetchProducts = useCallback(async () => {
+    try {
+      const response = await getProducts();
+      setProducts(response.data.products);
+      return { success: true, message: "Products fetched successfully" };
+    } catch (error) {
+      console.error(error);
+      return { success: false, message: "Server error" };
+    }
+  },[])
+
+  // update product
+  const updateProduct = async (id, updatedProduct) => {
+    if (!updatedProduct.name || !updatedProduct.image || !updatedProduct.price) {
+      return { success: false, message: "Please fill all fields." };
+    }
+
+    try {
+      const response = await updateProduct(id, updatedProduct);
+      const updatedProductData = response.data.product;
+      setProducts((prev) =>
+        prev.map((product) => (product._id === id ? updatedProductData : product))
+      );
+      return { success: true, message: "Product updated successfully" };
+    } catch (error) {
+      console.error(error);
+      return { success: false, message: "Server error" };
+    }
+  };
 
   return (
-    <ProductContext.Provider value={{ products, createProduct, removeProduct }}>
+    <ProductContext.Provider value={{ products, createProduct, removeProduct, fetchProducts, updateProduct }}>
       {children}
     </ProductContext.Provider>
   );
