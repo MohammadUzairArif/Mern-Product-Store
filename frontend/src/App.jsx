@@ -11,11 +11,8 @@ function App() {
       children: [
         { path: '/', element: <HomePage/> },
         { path: '/create', element: <CreatePage/> },
-     
       ]
-    }
-
-    
+    }    
   ])
  
 
