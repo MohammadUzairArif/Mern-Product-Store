@@ -1,7 +1,9 @@
 🛒 Product Store
+
 🔥 A modern, responsive MERN stack product management app with seamless CRUD operations and elegant UI.
 
 📄 Project Description
+
 Product Store is a full-stack web application built using the MERN stack (MongoDB, Express.js, React.js, Node.js) with modern styling powered by Tailwind CSS. This project allows users to perform complete CRUD (Create, Read, Update, Delete) operations on products through an intuitive and responsive user interface.
 
 The frontend is developed with React.js and Axios for seamless API integration, while the backend is powered by Express.js and MongoDB for robust data handling. The project also utilizes modern UI libraries like Chakra UI, Framer Motion, and React Toastify for better user experience and notifications.
